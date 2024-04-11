@@ -29,7 +29,7 @@ const checkUserId = (request, response, next) => {
 
     request.userIndex = index
     request.userId = id
-    request.userFilter = filters
+    request.achaFilter = filters
 
     next()
 }
@@ -72,11 +72,10 @@ app.delete('/orders/:id', checkUserId, (request, response) => {
 
 app.get('/orders/:id', checkUserId, (request, response) => {
 
-
-    const filters = request.userFilter
+    const { order, clienteName, price, status } = request.body
+    const filters = request.achaFilter
     const id = request.userId
-    const findResult = { id }
-
+    const findResult = { id, order, clienteName, price, status }
     orders[filters] = findResult
 
 
