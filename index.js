@@ -12,6 +12,15 @@ const orders = []
 
 const checkUserId = (request, response, next) => {
     const { id } = request.params
+
+
+    const filters = orders.findIndex(filtro => filtro.id === id)
+
+
+    if (filters < 0) {
+        return response.status(404).json({ message: "user not found" })
+    }
+
     const index = orders.findIndex(user => user.id === id)
 
     if (index < 0) {
@@ -20,6 +29,7 @@ const checkUserId = (request, response, next) => {
 
     request.userIndex = index
     request.userId = id
+    request.userFilter = filters
 
     next()
 }
@@ -61,11 +71,16 @@ app.delete('/orders/:id', checkUserId, (request, response) => {
 })
 
 app.get('/orders/:id', checkUserId, (request, response) => {
-    request.userIndex = index
 
-    orders.push(index)
 
-    return response.json(orders)
+    const filters = request.userFilter
+    const id = request.userId
+    const findResult = { id }
+
+    orders[filters] = findResult
+
+
+    return response.json(findResult)
 })
 
 app.listen(port, () => {
